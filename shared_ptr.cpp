@@ -6,25 +6,44 @@ class shared_ptr
 {
 private:
 	T* ptr;
-	int* ref_count; // Reference count
+	int* ref_count;
+
 public:
-	// Default constructor
-	explicit shared_ptr(T* pointer = nullptr) : ptr(pointer), ref_count(new int(1)) {}
-
-	// Copy constructor
-	shared_ptr(const shared_ptr& other) : ptr(other.ptr), ref_count(other.ref_count) {
+	//default
+	explicit shared_ptr(T*ptr = nullptr) :ptr(ptr), ref_count(new int(1)) {}
+	//ctor copy
+	shared_ptr(const shared_ptr& other) :ptr(other.ptr), ref_count(other.ref_count) {
 		++(*ref_count);
-	}
-
-	// Move constructor
-	shared_ptr(shared_ptr&& other) noexcept : ptr(other.ptr), ref_count(other.ref_count) {
+	};
+	//ctor move
+	shared_ptr(shared_ptr&& other) noexcept :ptr(other.ptr), ref_count(other.ref_count) {
 		other.ptr = nullptr;
 		other.ref_count = nullptr;
+	};
+	//ctor for mass
+	shared_ptr(T*arraPtr,size_t size):ptr(arraPtr),ref_count(new int (1+size)){
+		--(*ref_count);
 	}
 
-	// Constructor for arrays
-	shared_ptr(T* arrayPtr, size_t size) : ptr(arrayPtr), ref_count(new int(1 + size)) {
-		--(*ref_count);
+	 T& operator*() const {
+		return *ptr;
+	}
+
+	 T* operator->(){ 
+		return ptr;
+	}
+
+	shared_ptr&& operator=(const shared_ptr&& other) {
+		if (this != &other) {
+			if (ptr && --(*ref_count) == 0) {
+				delete ptr;
+				delete ref_count;
+			}
+			ptr = other.ptr;
+			ref_count = other.ref_count;
+			++(*ref_count);
+		}
+		return *this;
 	}
 
 	shared_ptr& operator=(const shared_ptr& other) {
@@ -38,14 +57,6 @@ public:
 			++(*ref_count);
 		}
 		return *this;
-	}
-
-	T& operator*() {
-		return *ptr;
-	}
-
-	T* operator->() {
-		return ptr;
 	}
 
 	~shared_ptr() {
