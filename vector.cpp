@@ -50,11 +50,6 @@ public:
 		return data + size;
 	}
 
-	T* operator++()
-	{
-		return data++;
-	}
-
 	T& operator[](size_t index)
 	{
 		if (index >= size)
