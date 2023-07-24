@@ -1,4 +1,4 @@
-#include<iostream>
+#include <iostream>
 
 template<typename T>
 class vector {
@@ -7,11 +7,11 @@ private:
 	size_t size;
 	size_t capacity;
 public:
-	//default
-	vector():data(nullptr),size(0),capacity(0){}
+	// Default constructor
+	vector(): data(nullptr), size(0), capacity(0) {}
 
-	//initializer_list
-	vector(std::initializer_list<T> initList):data(nullptr),size(0),capacity(0)
+	// Initializer list constructor
+	vector(std::initializer_list<T> initList): data(nullptr), size(0), capacity(0)
 	{
 		reserve(initList.size());
 		for (const T& val : initList) {
@@ -19,8 +19,8 @@ public:
 		}
 	}
 
-	//copy
-	vector(const T& other) :data(nullptr), size(0), capacity(0)
+	// Copy constructor
+	vector(const T& other) : data(nullptr), size(0), capacity(0)
 	{
 		*this = other;
 	}
@@ -50,12 +50,12 @@ public:
 		return data + size;
 	}
 
-	T* operator ++()
+	T* operator++()
 	{
 		return data++;
 	}
 
-	T&operator [] (size_t index)
+	T& operator[](size_t index)
 	{
 		if (index >= size)
 			throw std::out_of_range("Index out of range");
@@ -63,9 +63,8 @@ public:
 		return data[index];
 	}
 
-	//copy
-	//через const ref потому что мы не изменяем other
-	vector& operator = (const vector& other)
+	// Copy assignment operator (using const reference since we don't modify 'other')
+	vector& operator=(const vector& other)
 	{
 		if (this == &other)
 			return *this;
@@ -83,9 +82,9 @@ public:
 
 		return *this;
 	}
-	//move
-	// не через const ref потому что мы не изменяем other
-	vector& operator = (vector&& other) noexcept
+
+	// Move assignment operator (not using const reference since we modify 'other')
+	vector& operator=(vector&& other) noexcept
 	{
 		if (this == &other) {
 			return *this; 
@@ -93,12 +92,12 @@ public:
 
 		clear();
 
-		// Перемещаем ресурсы из other в текущий вектор
+		// Move resources from 'other' to the current vector
 		data = other.data;
 		size = other.size;
 		capacity = other.capacity;
 
-		// Сбрасываем other, чтобы он не владел ресурсами после перемещения
+		// Reset 'other' so it does not own the resources after the move
 		other.data = nullptr;
 		other.size = 0;
 		other.capacity = 0;
@@ -123,7 +122,7 @@ public:
 		data[size++] = val;
 	}
 
-	size_t getsize () const 
+	size_t getsize() const 
 	{
 		return size;
 	}
@@ -138,14 +137,13 @@ public:
 		if (newCapacity <= capacity) {
 			return;
 		}
-		T* newdData = new T[newCapacity];
+		T* newData = new T[newCapacity];
 		for (size_t i = 0; i < size; i++)
 		{
-			newdData[i] = data[i];
+			newData[i] = data[i];
 		}
 		delete[] data;
-		data = newdData;
+		data = newData;
 		capacity = newCapacity;
 	}
 };
-
