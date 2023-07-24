@@ -84,7 +84,7 @@ public:
 	}
 
 	// Move assignment operator (not using const reference since we modify 'other')
-	vector& operator=(vector&& other) noexcept
+	vector&& operator=(vector&& other) noexcept
 	{
 		if (this == &other) {
 			return *this; 
